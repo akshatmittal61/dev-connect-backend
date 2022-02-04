@@ -65,5 +65,3 @@ router.post(
 );
 
 export default router;
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjFmYzMyYzIwYWVlNjdlOGI1NTE0OTdhIn0sImlhdCI6MTY0MzkxODAxOCwiZXhwIjoxNjQ0Mjc4MDE4fQ.cQ5YgZZVlnw16Xtyv_NO4gAzjrsMjlTQ_-RcK-4SyGI
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjFmYzMyYzIwYWVlNjdlOGI1NTE0OTdhIn0sImlhdCI6MTY0MzkxODAxOCwiZXhwIjoxNjQ0Mjc4MDE4fQ.cQ5YgZZVlnw16Xtyv_NO4gAzjrsMjlTQ_-RcK-4SyGI
