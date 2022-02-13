@@ -1,8 +1,8 @@
 import express from "express";
-import auth from "../../middleware/auth.js";
-import User from "../../models/User.js";
-import Profile from "../../models/Profile.js";
 import { check, validationResult } from "express-validator";
+import User from "../../models/User.js";
+import auth from "../../middleware/auth.js";
+import Profile from "../../models/Profile.js";
 const router = express.Router();
 
 router.get("/me", auth, async (req, res) => {
@@ -90,5 +90,39 @@ router.post(
 		res.send("Hello");
 	}
 );
+
+router.get("/", async (req, res) => {
+	try {
+		const profiles = await Profile.find().populate("user", [
+			"name",
+			"avatar",
+		]);
+		res.json(profiles);
+	} catch (err) {
+		console.log(err.message);
+		res.status(500).send("Server Error");
+	}
+});
+
+router.get("/user/:user_id", async (req, res) => {
+	try {
+		const profile = await Profile.findOne({
+			user: req.params.user_id,
+		}).populate("user", ["name", "avatar"]);
+		if (!profile)
+			res.status(400).json({
+				message: "Profile not found",
+			});
+		res.json(profile);
+	} catch (err) {
+		console.log(err.message);
+		if (err.kind === "ObjectId") {
+			res.status(400).json({
+				message: "Profile not found",
+			});
+		}
+		res.status(500).send("Server Error");
+	}
+});
 
 export default router;
