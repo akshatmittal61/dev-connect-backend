@@ -3,6 +3,7 @@ import { check, validationResult } from "express-validator";
 import User from "../../models/User.js";
 import auth from "../../middleware/auth.js";
 import Profile from "../../models/Profile.js";
+import request from "request";
 const router = express.Router();
 
 router.get("/me", auth, async (req, res) => {
@@ -237,6 +238,28 @@ router.delete("/education/:exp_id", auth, async (req, res) => {
 		profile.education.splice(remIndex, 1);
 		await profile.save();
 		res.json(profile);
+	} catch (err) {
+		console.log(err);
+		res.status(500).send("Server Error");
+	}
+});
+
+router.get("/github/:username", async (req, res) => {
+	try {
+		const options = {
+			uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}`,
+			method: "GET",
+			headers: { "user-agent": "node.js" },
+		};
+		request(options, (error, response, body) => {
+			if (error) console.error(error);
+			if (response.statusCode != 200) {
+				return res.status(404).json({
+					message: `No github profile found for ${req.params.username}`,
+				});
+			}
+			res.json(JSON.parse(body));
+		});
 	} catch (err) {
 		console.log(err);
 		res.status(500).send("Server Error");
