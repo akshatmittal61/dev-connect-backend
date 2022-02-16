@@ -140,4 +140,26 @@ router.post(
 	}
 );
 
+router.delete("/comment/:id/:comment_id", auth, async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.id);
+		const comment = await post.comments.find(
+			(comment) => comment.id === req.params.comment_id
+		);
+		if (!comment)
+			return res.status(404).json({ message: "Comment not found" });
+		if (comment.user.toString() !== req.user.id)
+			return res.status(401).json({ message: "User not authorized" });
+		const remIndex = post.comments
+			.map((comment) => comment.user.toString())
+			.indexOf(req.user.id);
+		post.comments.splice(remIndex, 1);
+		await post.save();
+		res.json(post.comments);
+	} catch (err) {
+		console.error(err);
+		res.status(500).send("Server Error");
+	}
+});
+
 export default router;
